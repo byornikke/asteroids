@@ -1,25 +1,35 @@
-# this allows us to use code from
-# the open-source pygame library
-# throughout this file
 import pygame
 from constants import *
 from player import Player
 
 def main():
+    # create game and functional parameters
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
+    
+    #initiate player   
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    Player.containers = (updatable, drawable)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    
+    # main game loop
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return
+            
+        # update and draw player
         dt = clock.tick(60) / 1000
         screen.fill(("black"))
-        player.update(dt)
-        player.draw(screen)
+        
+        for entity in updatable:
+            entity.update(dt)
+        for entity in drawable: 
+            entity.draw(screen)
         pygame.display.flip()
         
 
